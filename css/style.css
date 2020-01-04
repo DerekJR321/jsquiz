@@ -1,0 +1,238 @@
+/* General Settings */
+html {
+	height: 100%;
+}
+
+body {
+	color: #73879C;
+	background-image: linear-gradient(to bottom, #000000, #111111, #1b1b1b, #252525, #303030);
+	background-size: cover;
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.471;
+	height: 100%;
+	width: 100%;
+}
+
+h2 {
+	font-size: 2.12em;
+	color: #f2b115;
+	margin-bottom: 30px;
+}
+
+p {
+	padding: 10px;
+	font-size: 1.2em;
+	line-height: 21px;
+	margin-bottom: 12px;
+}
+
+input[type=radio] {
+  margin-right: 15px;
+}
+
+.disabled {
+  pointer-events: none !important;
+	opacity: 0.3 !important;
+	cursor: default !important;
+}
+
+.displaynone {
+	display: none !important;
+}
+
+#bg {
+  width: 100%;
+  height: 35em;
+}
+
+#bg::after {
+  content: "";
+  opacity: 0.5;
+}
+
+/* Main Display */
+#mainContainer {
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	text-align: center;
+	clear: both;
+	margin: 0 auto;
+	border: none;
+}
+
+.divLeft { grid-area: 1 / 1 / 6 / 2 }
+.divRight { grid-area: 1 / 5 / 6 / 6 }
+.divTitle { grid-area: 1 / 2 / 2 / 5 }
+.divQuiz { 
+	grid-area: 2 / 2 / 5 / 5 
+}
+.divFooter { grid-area: 5 / 2 / 6 / 5 }
+
+#img-header {
+	margin: 0 auto;
+	text-align: center;	
+	height: auto;
+}
+
+#img-header img {
+	display :block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/* QUIZ CONTAINER */
+.quiz-container {
+	position: relative;
+	border: 2px solid #ddd;
+	height: 550px;
+	overflow: hidden;
+	text-align: left;
+	box-shadow: 0 25px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+#title {
+	position: absolute;
+	left: 60px;
+	top: 20px;
+	width: 900px;
+  z-index: 100;
+}
+
+.question, #results {
+	position: absolute;
+	visibility: visible;
+	left: 60px;
+	top: 100px;
+	width: 40%;
+	opacity: 1;
+  color: #fff;
+  z-index: 1001;
+  background-color: rgba(56, 56, 56, 0.5);
+}
+
+#results p {
+  font-size: 1.25em;
+}
+
+.answers {
+  margin-bottom: 20px;
+  text-align: left;
+  position: absolute;
+  top: 260px;
+  left: 50px;
+	width: 25em;
+}
+
+.answers label {
+  display: block;
+  margin-bottom: 10px;
+  background: #444;
+  padding: 15px;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 400;
+}
+
+.answerText {
+	display: block;
+	position: absolute;
+	right: 12%;
+	top: 200px;
+	width: 40%;
+	opacity: 0.98;
+	color: black;
+	background: rgba(255, 255, 255, 0.8);
+	border: 3px solid rgba(0, 0, 0, 0.6);
+	padding: 20px;
+	z-index: 1000;
+	box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.6);
+}
+
+.answerText p {
+  color: #333;
+}
+
+/* Buttons */
+
+#confirm {
+  position: absolute;
+  left: 60px;
+  top: 470px;
+  z-index: 1000;
+}
+
+#next, #submit {
+  position: absolute;
+  right: 12%;
+  top: 470px;
+  z-index: 1000;
+}
+
+/* Slides */
+
+.slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.active-slide {
+  z-index: 2;
+  opacity: 1;
+}
+
+/* Radio Button */
+
+.answers input[type=radio].with-font {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.answers input[type=radio].with-font + label:before {
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f1db";
+  letter-spacing: 10px;
+  font-size: 1.2em;
+  color: #535353;
+  width: 1.4em;
+}
+
+.answers input[type=radio].with-font:focus + label:before {
+  content: "\f00c";
+  font-size: 1.6em;
+  color: green;
+}
+
+.answers input[type=radio].with-font:focus + label {
+  background: #fff !important;
+  color: #444;
+}
+
+.answers input[type=radio].with-font + label:hover {
+  background: #fff !important;
+  color: #444;
+  -webkit-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+/* Custom Buttons */
