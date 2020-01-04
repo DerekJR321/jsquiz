@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Back to the Future Quiz">
+	<meta name="author" content="Derek Reidy">
+	
+	<title>Back to the Future Quiz</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+	
+	<meta name="theme-color" content="#fafafa">
+</head>
+
+<!-- please excuse the excessive comments in this file. I'm finding the grid layout to be slightly confusing -->
+<body>
+	<!--main grid container-->
+	<div id="mainContainer">
+
+		<!--grid left container-->
+		<div class="divLeft"></div>
+		<!--/grid left container-->
+
+		<!--grid right container-->
+		<div class="divRight"></div>
+		<!--/grid right container-->
+
+		<!--title container-->
+		<div class="divTitle">
+			<!--title logo container-->
+			<div id="img-header">
+				<!--back to the future logo-->
+				<img class="img-responsive" src="image/title2.png" alt="Back to the Future Quiz">
+			</div>
+			<!--/title logo container-->
+		</div>
+		<!--/title container-->
+
+		<!--grid quiz container-->
+		<div class="divQuiz">
+			<div class="quiz-container">
+				<div id="quiz">
+					<div id="quizquestionContainer">
+						<div id="quizoptionContainer"></div>
+						<div id="results"></div>
+					</div>
+					<div id="quizresultsContainer"></div>
+				</div>
+				<button id="confirm" class="btn btn-warning">Answer Question</button>
+				<button id="next" class="aos-item btn btn-primary" data-aos="fade-left">Next Question</button>
+				<button id="submit" class="btn btn-success">Show My Results</button>
+			</div>
+		</div>
+		<!--/grid quiz container-->
+
+		<!--grid footer container-->
+		<div class="divFooter">footer</div>
+		<!--/grid footer container-->
+	</div>
+	<!--/main grid container-->
+
+	<!--javascript files-->
+	<script type="text/javascript" src="js/modernizr-3.7.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js" integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P" crossorigin="anonymous"></script>
+	<script src="js/questions.js"></script>
+	<!--/javascript files-->
+
+	<!-- Back to the Future Quiz Script (eventually external) -->
+	<script>
+		(function() {
+
+			//shuffle array
+			function shuffle({arra1}) {
+				let ctr = arra1.length, temp, index;
+				while (ctr > 0) {
+					index = Math.floor(Math.random() * ctr);
+					ctr--;
+					temp = arra1[ctr];
+					arra1[ctr] = arra1[index];
+					arra1[index] = temp;
+				}
+				return arra1;
+			}
+
+			//build the quiz
+			function buildQuiz() {
+				let qTmp = [];
+				let qLength = myQuestions.length;
+				for(let i = 1; i <= qLength; i++) {
+					qTmp.push(i);
+				}
+
+				// shuffle questions array
+				let qArray = shuffle({arra1: qTmp});
+				/*****************************/
+					console.log("Shuffled Array:");
+					console.log(qArray);
+				/*****************************/
+
+				const output = [];
+				myQuestions.forEach(function (currentQuestion, questionNumber) {
+
+					/* test code */
+					let testQuestion = myQuestions.find(obj => { return obj.id === 3});
+					
+					/* end test code */
+
+					const answers = [];
+					for (let abc in currentQuestion.answers) {
+						answers.push(
+								`<input id="question${questionNumber}${abc}" type="radio" name="question${questionNumber}" class="with-font" value="${abc}"><label for="question${questionNumber}${abc}">${currentQuestion.answers[abc]}</label>`
+						);
+					}
+
+
+
+					output.push(
+							`<div class="slide">
+								<div id="bg" style="background: url(${currentQuestion.background}) no-repeat;background-size: cover;">
+									<div id="title" class="aos-item" data-aos="fade-down">
+										<h2>${currentQuestion.title}</h2>
+									</div>
+									<div class="question aos-item" data-aos="zoom-in-down">
+										<p>${currentQuestion.question}</p>
+									</div>
+									<div class="answers aos-item" data-aos="flip-left">
+										<p>${answers.join("")}</p>
+									</div>
+								</div>
+							</div>`
+					);
+				});
+
+				quizContainer.innerHTML = output.join("");
+			}
+
+			// Show Answers
+			function showAnswer() {
+				const answerTextContainers = quizContainer.querySelectorAll(".answers");
+				const answersArray = [];
+
+				myQuestions.forEach((currentQuestion, questionNumber) => {
+					const answerTextContainer = answerTextContainers[questionNumber];
+					const selector2 = `input[name=question${questionNumber}]:checked`;
+					const userAnswer2 = (answerTextContainer.querySelector(selector2) || {}).value;
+					if (userAnswer2 === currentQuestion.correctAnswer ) {
+						answersArray.push(
+								`<div class="slide">
+									<div class="answerText aos-item" data-aos="fade-down">
+										<p>${currentQuestion.correctAnswerText}</p>
+									</div>
+								</div>`);
+
+					} else {
+						answersArray.push(
+								`<div class="slide">
+									<div class="answerText aos-item" data-aos="zoom-in">
+										<p>${currentQuestion.falseAnswerText}</p>
+									</div>
+								</div>`);
+					}
+				});
+					
+				// combine results
+				resultsTextContainer.innerHTML = answersArray.join("");
+
+				const answerSlides = resultsTextContainer.querySelectorAll(".slide");
+				answerSlides[nSlide].classList.add("active-slide");
+				nSlide = nSlide + 1;
+
+				// Show Next Button
+				nextButton.classList.remove("displaynone");
+				// Disable Answers and Buttons
+					confirmButton.classList.add("disabled");
+					$('.answers').addClass('disabled');
+					
+					// Show Submit Button on last slide
+					if (currentSlide === slides.length - 1) {
+					submitButton.style.display = "inline-block";
+				}
+				}
+			  
+				// Show Quiz Results
+				function showResults() {
+					const answerContainers = quizContainer.querySelectorAll(".answers");
+					let numCorrect = 0;
+					
+					myQuestions.forEach((currentQuestion, questionNumber) => {
+						const answerContainer = answerContainers[questionNumber];
+						const selector = `input[name=question${questionNumber}]:checked`;
+						const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+						
+						if (userAnswer === currentQuestion.correctAnswer) {
+							numCorrect++;
+						}
+					});
+
+					// create quiz length based on number of questions in questions.js
+					const quizLength = myQuestions.length;
+					const quizHalf = quizLength / 2;
+					
+					if (numCorrect === quizLength) {
+						resultsContainer.innerHTML = `<div class="aos-item" data-aos="zoom-in"><h2>Congratulations!</h2></div><div class="aos-item" data-aos="fade-down" data-aos-duration="1500" data-aos-delay="1200"><p>Very good, you're a Back to the Future EXPERT!</p><p>You answered ${numCorrect} out of ${myQuestions.length} questions correct.</p><a href="http://www.derekreidy.com"><button class="btn btn-default">Visit my Website</button></a> &nbsp; <a href="./index.html"><button class="btn btn-default">Restart the Quiz</button></a></div>`;
+					} else if (numCorrect >= quizHalf && numCorrect < quizLength ) {
+						resultsContainer.innerHTML = `<div class="aos-item" data-aos="fade-down"><h2>Not bad...</h2></div><div class="aos-item" data-aos="fade-down" data-aos-duration="1500" data-aos-delay="1200"><p>but not enough to be a winner.</p><p>You answered just ${numCorrect} out of ${myQuestions.length} questions correct.</p><a href="./index.html"><button id="playAgain" class="btn btn-default">Play again</button></a></div>`;
+					} else {
+						resultsContainer.innerHTML = `<div class="aos-item" data-aos="flip-left"><h2>Very bad...</h2></div><div class="aos-item" data-aos="fade-down" data-aos-duration="1500" data-aos-delay="1200"><p>You need to practice! All employees need to be familiar with the iDiv Health & Security rules.</p><p>You answered just ${numCorrect} out of ${myQuestions.length} questions correct.</p><a href="./index.html"><button id="playAgain" class="btn btn-default">Play again</button></a></div>`;
+					}
+				  
+				  // switch off Title, Question and Answers
+				  $('#title h2').css('display','none');
+				  $('.question').css('display','none');
+				  $('.answers').css('display','none');
+				  submitButton.classList.add("displaynone");
+				  nextButton.classList.add("displaynone");
+				  confirmButton.classList.add("displaynone");
+				  resultsTextContainer.innerHTML = '';
+
+	}
+			// Show Slides
+				function showSlide(n) {
+					slides[currentSlide].classList.remove("active-slide");
+					slides[n].classList.add("active-slide");
+					currentSlide = n;
+					confirmButton.style.display = "inline-block";
+					submitButton.style.display = "none";
+					nextButton.classList.add("displaynone");
+				}
+
+				// Show Next Slide
+				function showNextSlide() {
+					showSlide(currentSlide + 1);
+					resultsTextContainer.innerHTML = '';
+					confirmButton.classList.remove("disabled");
+					$('.answers').removeClass('disabled');
+				}
+
+				// Get HTML ID's for quiz
+				const quizContainer = document.getElementById("quizoptionContainer");
+				const resultsContainer = document.getElementById("results");
+				const resultsTextContainer = document.getElementById("quizresultsContainer");
+				
+				buildQuiz();
+
+				// Get HTML ID's for buttons & slides
+				const confirmButton = document.getElementById("confirm");
+				const nextButton = document.getElementById("next");
+				const submitButton = document.getElementById("submit");
+				const slides = document.querySelectorAll(".slide");
+				
+				let currentSlide = 0;
+				let nSlide = 0;
+				
+				showSlide(0);
+				
+				// Click Events
+				confirmButton.addEventListener("click", showAnswer);
+				nextButton.addEventListener("click", showNextSlide);
+				submitButton.addEventListener("click", showResults);
+			})();
+		</script>
+
+		<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+		<script>
+			AOS.init({
+				duration: 1200,
+			});
+		</script>
+	</body>
+</html>
